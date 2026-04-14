@@ -16,6 +16,15 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
+3. Run the quality checks
+
+   ```bash
+   npm run lint
+   npm run test
+   npm run typecheck
+   npm run doctor
+   ```
+
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
@@ -36,6 +45,33 @@ npm run reset-project
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
+
+## CI and builds
+
+This project uses GitHub Actions for CI in `.github/workflows/ci.yml`.
+
+The CI pipeline runs:
+
+- `npm run lint`
+- `npm run test:ci`
+- `npm run typecheck`
+- `npm run doctor`
+
+This project also includes EAS build profiles in `eas.json` and a GitHub Actions workflow in `.github/workflows/eas-build.yml`.
+
+To use EAS builds:
+
+1. Create an Expo account and log in with `npx eas-cli login`
+2. Initialize the project with `npx eas-cli project:init`
+3. Add `EXPO_TOKEN` as a GitHub Actions repository secret
+4. Trigger the `EAS Build` workflow manually, or push a `v*` tag for a production build
+
+Useful local commands:
+
+```bash
+npm run eas:build:preview
+npm run eas:build:production
+```
 
 To learn more about developing your project with Expo, look at the following resources:
 
