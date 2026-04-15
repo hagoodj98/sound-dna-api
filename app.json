@@ -28,7 +28,6 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
         "expo-splash-screen",
         {
@@ -39,6 +38,15 @@
           "dark": {
             "backgroundColor": "#000000"
           }
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow Sound DNA API to access your microphone to analyze sounds and provide personalized recommendations.",
+          "enableBackgroundPlayback": true,
+          "recordAudioAndroid": true,
+          "enableBackgroundRecording": true
         }
       ]
     ],
