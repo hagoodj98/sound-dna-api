@@ -9,25 +9,25 @@ import {
   useAudioPlayer,
 } from "expo-audio";
 import { useEffect, useState } from "react";
+import API_ENDPOINTS from "../config/api";
 export default function Index() {
   // Enable audio recording and playback
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   // Set the audio module to active so it can record and play audio
   const recorderState = useAudioRecorderState(audioRecorder);
-  const [audio, setAudio] = useState<string | null>(null); // State to hold the URI of the recorded audio
+  const [audioURI, setAudioURI] = useState<string | null>(null); // State to hold the URI of the recorded audio
 
   const player = useAudioPlayer(
-    audio, // Set the URI of the audio player to the recorded audio file
+    audioURI, // Set the URI of the audio player to the recorded audio file
   );
   const startRecording = async () => {
     await audioRecorder.prepareToRecordAsync(); // Prepare the audio recorder to start recording
     await audioRecorder.record(); // Start recording audio
   };
   const stopRecording = async () => {
-    Alert.alert(`Recording stopped. Audio saved at: ${recorderState.url}`); // Alert the user with the URI of the recorded audio for debugging purposes
     await audioRecorder.stop(); // Stop recording audio
-    const audio = audioRecorder.uri; // Get the URI of the recorded audio file
-    setAudio(audio); // Update the state with the URI of the recorded audio
+    const audioURI = audioRecorder.uri; // Get the URI of the recorded audio file
+    setAudioURI(audioURI); // Update the state with the URI of the recorded audio
   };
 
   useEffect(() => {
@@ -52,14 +52,31 @@ export default function Index() {
     if (recorderState.isRecording) {
       await stopRecording(); // Stop recording if it's currently recording
     }
+    // Create a FormData object to hold the audio file data for submission
+    const formData = new FormData();
+    // Append the recorded audio file to the form data with the appropriate fields
+    formData.append("audio", {
+      uri: audioURI, // Set the URI of the recorded audio file
+      name: "recording.m4a", // Set a name for the audio file
+      type: "audio/m4a", // Set the MIME type of the audio file
+    } as any); // Append the recorded audio file to the form data
 
-    const audioUri = audio; // Get the URI of the recorded audio
-    Alert.alert(`Audio URI: ${audioUri}`); // Log the audio URI for debugging purposes
     // Here you can implement the logic to submit the audio file to your backend or process it as needed
+    const response = await fetch(API_ENDPOINTS.SUBMIT_AUDIO, {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data", // Set the content type to multipart/form-data for file upload because we are sending a file in the request body
+      },
+      body: formData, // Send the form data containing the audio file in the request body
+    });
+
+    console.log(response);
+
+    alert(`Audio submitted successfully! Server response: ${response.status}`); // Alert the user that the audio was submitted successfully and show the server response status
   };
   const handleReplayAudio = async () => {
-    if (audio) {
-      console.log(`Playing audio from URI: ${audio}`); // Log the audio URI for debugging purposes
+    if (audioURI) {
+      console.log(`Playing audio from URI: ${audioURI}`); // Log the audio URI for debugging purposes
       player.seekTo(0);
       player.play(); // Play the recorded audio
     }
