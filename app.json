@@ -48,7 +48,8 @@
           "recordAudioAndroid": true,
           "enableBackgroundRecording": true
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
