@@ -1,9 +1,8 @@
-import { Alert, Button, Text, View } from "react-native";
+import { Alert, Button, View } from "react-native";
 import {
   useAudioRecorder,
   AudioModule,
   RecordingPresets,
-  setIsAudioActiveAsync,
   useAudioRecorderState,
   setAudioModeAsync,
   useAudioPlayer,
@@ -69,8 +68,6 @@ export default function Index() {
       },
       body: formData, // Send the form data containing the audio file in the request body
     });
-
-    console.log(response);
 
     alert(`Audio submitted successfully! Server response: ${response.status}`); // Alert the user that the audio was submitted successfully and show the server response status
   };
